@@ -41,7 +41,21 @@ cameras:
 
     detect:
       enabled: false
+
     record:
-      enabled: false
+      enabled: true
+      retain:
+        days: 0
+      alerts:
+        retain:
+          days: 3
+          mode: all
+      detections:
+        retain:
+          days: 3
+          mode: all
+
     snapshots:
-      enabled: false
+      enabled: true
+      retain:
+        default: 3
