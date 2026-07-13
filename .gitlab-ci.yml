@@ -1,0 +1,35 @@
+stages:
+  - .pre
+  - build
+  - test
+  - deploy
+  - verify
+  - .post
+
+include:
+    - component: $CI_SERVER_FQDN/home-lab/automations/docker-compose-service-deployment@v2.0.3
+      inputs:
+          vm-hostname: ha.vm.xbhl.intranet
+          vm-ssh-username: $SSH_USER
+          vm-ssh-private-key: $SSH_PRIVATE_KEY
+          service-name: frigate
+          container-name: frigate
+          container-location: /opt/containers/frigate
+          cloudflare-dns-entry-name: frigate.ha.intranet.xbhl.online
+          cloudflare-zone-id: $CLOUDFLARE_ZONE_ID
+          cloudflare-dns-api-token: $CLOUDFLARE_DNS_API_TOKEN
+          delete-existing-container-files: true
+
+.preconfigure-run-script:
+    script:
+        - 'echo "🔵 Ensuring ha docker network exists..."'
+        - $CMD_PREFIX "sh -lc 'docker network inspect ha > /dev/null 2>&1 || docker network create -d bridge ha'"
+
+setup:generate-build-artifacts:
+    script:
+        - cp src/.env $BUILD_ARTIFACTS_DIR
+        - echo "FRIGATE_MQTT_HOST=${MQTT_HOSTNAME}" >> $BUILD_ARTIFACTS_DIR/.env
+        - echo "FRIGATE_MQTT_USER=${MQTT_USERNAME}" >> $BUILD_ARTIFACTS_DIR/.env
+        - echo "FRIGATE_MQTT_PASSWORD=${MQTT_PASSWORD}" >> $BUILD_ARTIFACTS_DIR/.env
+        - echo "FRIGATE_TAPO_C260_BEDROOM_USERNAME=${TAPO_C260_BEDROOM_USERNAME}" >> $BUILD_ARTIFACTS_DIR/.env
+        - echo "FRIGATE_TAPO_C260_BEDROOM_PASSWORD=${TAPO_C260_BEDROOM_PASSWORD}" >> $BUILD_ARTIFACTS_DIR/.env

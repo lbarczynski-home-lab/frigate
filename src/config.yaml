@@ -1,0 +1,31 @@
+mqtt:
+  host: "{FRIGATE_MQTT_HOST}"
+  user: "{FRIGATE_MQTT_USER}"
+  password: "{FRIGATE_MQTT_PASSWORD}"
+
+go2rtc:
+  streams:
+    tapo_c260_bedroom_source: #h.265
+      - rtsp://{FRIGATE_TAPO_C260_BEDROOM_USERNAME}:{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}@10.21.255.191:554/stream1#tcp#backchannel=false
+
+    tapo_c260_bedroom: #h.264
+      - ffmpeg:tapo_c260_bedroom_source#video=h264#hardware=/dev/dri/card0
+
+cameras:
+  tapo_c260_bedroom:
+    ffmpeg:
+      hwaccel_args: -hwaccel vaapi -hwaccel_device /dev/dri/card0 -hwaccel_output_format yuv420p
+      inputs:
+        - path: rtsp://127.0.0.1:8554/tapo_c260_bedroom
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+            - snapshots
+
+    detect:
+      enabled: false
+    record:
+      enabled: false
+    snapshots:
+      enabled: false

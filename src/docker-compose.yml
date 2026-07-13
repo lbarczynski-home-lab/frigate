@@ -1,0 +1,63 @@
+services:
+  frigate:
+    container_name: frigate
+    image: ghcr.io/blakeblackshear/frigate:0.16.0
+    shm_size: "256mb"
+    configs:
+      - source: frigate_config_yaml
+        target: /config/config.yaml
+    volumes:
+      - config:/config
+      - storage:/media/frigate
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    devices:
+      - /dev/dri/card0:/dev/dri/card0
+    environment:
+      - FRIGATE_MQTT_HOST=${FRIGATE_MQTT_HOST:?err}
+      - FRIGATE_MQTT_USER=${FRIGATE_MQTT_USER:?err}
+      - FRIGATE_MQTT_PASSWORD=${FRIGATE_MQTT_PASSWORD:?err}
+      - FRIGATE_TAPO_C260_BEDROOM_USERNAME=${FRIGATE_TAPO_C260_BEDROOM_USERNAME:?err}
+      - FRIGATE_TAPO_C260_BEDROOM_PASSWORD=${FRIGATE_TAPO_C260_BEDROOM_PASSWORD:?err}
+    ports:
+      - "5000:5000" # Unauthenticated web interface
+      - "8971:8971" # Authenticated web interface
+      - "8554:8554" # RTSP restream from go2rtc
+      - "8555:8555/tcp" # WebRTC
+      - "8555:8555/udp" # WebRTC
+      - "1984:1984" # go2rtc debug control panel
+    networks:
+      - ha
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frigate-router.rule=Host(`${FRIGATE_DOMAIN:?err}`)"
+      - "traefik.http.routers.frigate-router.entrypoints=websecure"
+      - "traefik.http.routers.frigate-router.tls=true"
+      - "traefik.http.routers.frigate-router.service=frigate"
+      - "traefik.http.services.frigate.loadbalancer.server.url=http://frigate:5000"
+    stop_grace_period: 30s
+    restart: unless-stopped
+
+configs:
+  frigate_config_yaml:
+    file: ./config.yaml
+
+volumes:
+  config:
+    driver: local
+
+  storage:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: "addr=${REMOTE_STORAGE_HOSTNAME:?err},rw,soft,timeo=100,nolock"
+      device: ":${REMOTE_STORAGE_PATH:?err}"
+
+networks:
+  ha:
+    external: true
+  proxy:
+    external: true
