@@ -13,6 +13,11 @@ go2rtc:
 
 cameras:
   tapo_c260_bedroom:
+    onvif:
+      host: 10.21.255.191
+      port: 2020
+      user: "{FRIGATE_TAPO_C260_BEDROOM_USERNAME}"
+      password: "{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}"
     ffmpeg:
       inputs:
         - path: rtsp://127.0.0.1:8554/tapo_c260_bedroom
