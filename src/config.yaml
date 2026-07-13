@@ -9,7 +9,7 @@ go2rtc:
       - rtsp://{FRIGATE_TAPO_C260_BEDROOM_USERNAME}:{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}@10.21.255.191:554/stream1#tcp#backchannel=false
 
     tapo_c260_bedroom: #h.264
-      - ffmpeg:tapo_c260_bedroom_source#video=h264
+      - ffmpeg:tapo_c260_bedroom_source#video=h264#audio=aac
 
 cameras:
   tapo_c260_bedroom:
@@ -26,6 +26,13 @@ cameras:
             - detect
             - record
             - snapshots
+            - audio
+
+    audio:
+      enabled: true
+      listen:
+        - crying
+        - bark
 
     detect:
       enabled: false
