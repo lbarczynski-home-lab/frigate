@@ -8,8 +8,11 @@ go2rtc:
     tapo_c260_bedroom_source: #h.265
       - rtsp://{FRIGATE_TAPO_C260_BEDROOM_USERNAME}:{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}@10.21.255.191:554/stream1#tcp#backchannel=false
 
-    tapo_c260_bedroom: #h.264
+    tapo_c260_bedroom_4k: #h.264
       - ffmpeg:tapo_c260_bedroom_source#video=h264#audio=aac
+
+    tapo_c260_bedroom_720p: #h.264 (lower resolution)
+      - rtsp://{FRIGATE_TAPO_C260_BEDROOM_USERNAME}:{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}@10.21.255.191:554/stream2#tcp#backchannel=false
 
 cameras:
   tapo_c260_bedroom:
@@ -20,13 +23,15 @@ cameras:
       password: "{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}"
     ffmpeg:
       inputs:
-        - path: rtsp://127.0.0.1:8554/tapo_c260_bedroom
+        - path: rtsp://127.0.0.1:8554/tapo_c260_bedroom_4k
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+            - audio
+        - path: rtsp://127.0.0.1:8554/tapo_c260_bedroom_720p
           input_args: preset-rtsp-restream
           roles:
             - detect
-            - record
-            - snapshots
-            - audio
 
     audio:
       enabled: true
