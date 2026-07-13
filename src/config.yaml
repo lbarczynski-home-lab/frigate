@@ -9,12 +9,11 @@ go2rtc:
       - rtsp://{FRIGATE_TAPO_C260_BEDROOM_USERNAME}:{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}@10.21.255.191:554/stream1#tcp#backchannel=false
 
     tapo_c260_bedroom: #h.264
-      - ffmpeg:tapo_c260_bedroom_source#video=h264#hardware=/dev/dri/card0
+      - ffmpeg:tapo_c260_bedroom_source#video=h264
 
 cameras:
   tapo_c260_bedroom:
     ffmpeg:
-      hwaccel_args: -hwaccel vaapi -hwaccel_device /dev/dri/card0 -hwaccel_output_format yuv420p
       inputs:
         - path: rtsp://127.0.0.1:8554/tapo_c260_bedroom
           input_args: preset-rtsp-restream

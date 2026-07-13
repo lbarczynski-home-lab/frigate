@@ -13,8 +13,6 @@ services:
         target: /tmp/cache
         tmpfs:
           size: 1000000000
-    devices:
-      - /dev/dri/card0:/dev/dri/card0
     environment:
       - FRIGATE_MQTT_HOST=${FRIGATE_MQTT_HOST:?err}
       - FRIGATE_MQTT_USER=${FRIGATE_MQTT_USER:?err}
