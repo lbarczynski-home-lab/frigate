@@ -5,17 +5,20 @@ mqtt:
 
 go2rtc:
   streams:
-    tapo_c260_bedroom_source_4k: #h.265
+    tapo_c260_bedroom_4k_h265:
       - rtsp://{FRIGATE_TAPO_C260_BEDROOM_USERNAME}:{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}@10.21.255.191:554/stream1#tcp#backchannel=false
-
-    tapo_c260_bedroom_source_720p: #h.264 (lower resolution)
+    tapo_c260_bedroom_720p_h264:
       - rtsp://{FRIGATE_TAPO_C260_BEDROOM_USERNAME}:{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}@10.21.255.191:554/stream2#tcp#backchannel=false
-
-    tapo_c260_bedroom: #h.264
-      - ffmpeg:tapo_c260_bedroom_source_4k#video=h264#audio=aac
+    tapo_c260_bedroom_4k_h264:
+      - ffmpeg:tapo_c260_bedroom_4k_h265#video=h264#audio=aac
 
 cameras:
   tapo_c260_bedroom:
+    live:
+      streams:
+        "Main (4k, h.264)": tapo_c260_bedroom_4k_h264
+        "Sub (4k, h.265)": tapo_c260_bedroom_4k_h265
+        "Low quality (720p, h.264)": tapo_c260_bedroom_720p_h264
     onvif:
       host: 10.21.255.191
       port: 2020
@@ -23,12 +26,12 @@ cameras:
       password: "{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}"
     ffmpeg:
       inputs:
-        - path: rtsp://127.0.0.1:8554/tapo_c260_bedroom
+        - path: rtsp://127.0.0.1:8554/tapo_c260_bedroom_4k_h265
           input_args: preset-rtsp-restream
           roles:
             - record
             - audio
-        - path: rtsp://127.0.0.1:8554/tapo_c260_bedroom_source_720p
+        - path: rtsp://127.0.0.1:8554/tapo_c260_bedroom_720p_h264
           input_args: preset-rtsp-restream
           roles:
             - detect
