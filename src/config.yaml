@@ -6,9 +6,9 @@ mqtt:
 go2rtc:
   streams:
     tapo_c260_bedroom_4k_h265:
-      - rtsp://{FRIGATE_TAPO_C260_BEDROOM_USERNAME}:{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}@10.21.255.191:554/stream1#tcp#backchannel=false
+      - rtsp://{FRIGATE_TAPO_C260_BEDROOM_USERNAME}:{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}@{FRIGATE_TAPO_C260_BEDROOM_HOST}:554/stream1#tcp#backchannel=false
     tapo_c260_bedroom_720p_h264:
-      - rtsp://{FRIGATE_TAPO_C260_BEDROOM_USERNAME}:{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}@10.21.255.191:554/stream2#tcp#backchannel=false
+      - rtsp://{FRIGATE_TAPO_C260_BEDROOM_USERNAME}:{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}@{FRIGATE_TAPO_C260_BEDROOM_HOST}:554/stream2#tcp#backchannel=false
     tapo_c260_bedroom_4k_h264:
       - ffmpeg:tapo_c260_bedroom_4k_h265#video=h264#audio=aac
 
@@ -20,7 +20,7 @@ cameras:
         "Sub (4k, h.265)": tapo_c260_bedroom_4k_h265
         "Low quality (720p, h.264)": tapo_c260_bedroom_720p_h264
     onvif:
-      host: 10.21.255.191
+      host: "{FRIGATE_TAPO_C260_BEDROOM_HOST}"
       port: 2020
       user: "{FRIGATE_TAPO_C260_BEDROOM_USERNAME}"
       password: "{FRIGATE_TAPO_C260_BEDROOM_PASSWORD}"
