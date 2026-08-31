@@ -38,6 +38,9 @@ services:
       - "traefik.http.routers.frigate-router.service=frigate"
       - "traefik.http.services.frigate.loadbalancer.server.url=http://frigate:5000"
       - "traefik.docker.network=proxy"
+      - 'wud.watch=true'
+      - 'wud.tag.include=^\d+\.\d+\.\d+$$'
+      - "wud.link.template=https://github.com/blakeblackshear/frigate/releases/tag/v$${major}.$${minor}.$${patch}"
     stop_grace_period: 30s
     restart: unless-stopped
 
