@@ -20,13 +20,6 @@ services:
       - FRIGATE_TAPO_C260_BEDROOM_HOST=${TAPO_C260_BEDROOM_HOSTNAME:?err}
       - FRIGATE_TAPO_C260_BEDROOM_USERNAME=${TAPO_C260_BEDROOM_USERNAME:?err}
       - FRIGATE_TAPO_C260_BEDROOM_PASSWORD=${TAPO_C260_BEDROOM_PASSWORD:?err}
-    ports:
-      - "5000:5000" # Unauthenticated web interface
-      - "8971:8971" # Authenticated web interface
-      - "8554:8554" # RTSP restream from go2rtc
-      - "8555:8555/tcp" # WebRTC
-      - "8555:8555/udp" # WebRTC
-      - "1984:1984" # go2rtc debug control panel
     networks:
       - ha
       - proxy
@@ -36,7 +29,8 @@ services:
       - "traefik.http.routers.frigate-router.entrypoints=websecure"
       - "traefik.http.routers.frigate-router.tls=true"
       - "traefik.http.routers.frigate-router.service=frigate"
-      - "traefik.http.services.frigate.loadbalancer.server.port=5000"
+      - "traefik.http.routers.frigate-router.middlewares=authelia@file"
+      - "traefik.http.services.frigate.loadbalancer.server.port=8971"
       - "traefik.docker.network=proxy"
       - 'wud.watch=true'
       - 'wud.tag.include=^\d+\.\d+\.\d+$$'
