@@ -1,7 +1,7 @@
 services:
   frigate:
     container_name: frigate
-    image: ghcr.io/blakeblackshear/frigate:0.16.0
+    image: ghcr.io/blakeblackshear/frigate:0.17.2
     shm_size: "256mb"
     configs:
       - source: frigate_config_yaml
@@ -32,11 +32,11 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frigate-router.rule=Host(`${FRIGATE_DOMAIN:?err}`)"
+      - "traefik.http.routers.frigate-router.rule=Host(`frigate.ha.intranet.xbhl.online`)"
       - "traefik.http.routers.frigate-router.entrypoints=websecure"
       - "traefik.http.routers.frigate-router.tls=true"
       - "traefik.http.routers.frigate-router.service=frigate"
-      - "traefik.http.services.frigate.loadbalancer.server.url=http://frigate:5000"
+      - "traefik.http.services.frigate.loadbalancer.server.port=5000"
       - "traefik.docker.network=proxy"
       - 'wud.watch=true'
       - 'wud.tag.include=^\d+\.\d+\.\d+$$'
@@ -56,8 +56,8 @@ volumes:
     driver: local
     driver_opts:
       type: nfs
-      o: "addr=${REMOTE_STORAGE_HOSTNAME:?err},rw,soft,timeo=100,nolock"
-      device: ":${REMOTE_STORAGE_PATH:?err}"
+      o: "addr=nas.srv.xbhl.intranet,rw,soft,timeo=100,nolock"
+      device: ":/share/NFSv=4/RemoteStorage/Monitoring"
 
 networks:
   ha:
