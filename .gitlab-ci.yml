@@ -12,7 +12,7 @@ include:
           cloudflare-zone-id: $CLOUDFLARE_ZONE_ID
           cloudflare-dns-api-token: $CLOUDFLARE_DNS_API_TOKEN
           delete-existing-container-files: true
-
+          
 .preconfigure-run-script:
     script:
         - 'echo "🔵 Ensuring ha docker network exists..."'
@@ -25,3 +25,5 @@ setup:generate-build-artifacts:
         - sed -i "s|^MQTT_USERNAME=.*|MQTT_USERNAME=${MQTT_USERNAME}|" $BUILD_ARTIFACTS_DIR/.env
         - sed -i "s|^MQTT_PASSWORD=.*|MQTT_PASSWORD=${MQTT_PASSWORD}|" $BUILD_ARTIFACTS_DIR/.env
         - sed -i "s|^TAPO_C260_BEDROOM_PASSWORD=.*|TAPO_C260_BEDROOM_PASSWORD=${TAPO_C260_BEDROOM_PASSWORD}|" $BUILD_ARTIFACTS_DIR/.env
+
+
