@@ -33,6 +33,8 @@ services:
       - "traefik.http.services.frigate.loadbalancer.server.port=8971"
       - "traefik.docker.network=proxy"
       - 'wud.watch=true'
+      - 'wud.display.name=Frigate NVR'
+      - 'wud.display.icon=si:frigate'
       - 'wud.tag.include=^\d+\.\d+\.\d+$$'
       - "wud.link.template=https://github.com/blakeblackshear/frigate/releases/tag/v$${major}.$${minor}.$${patch}"
     stop_grace_period: 30s
