@@ -22,6 +22,9 @@ services:
       - FRIGATE_TAPO_C260_BEDROOM_PASSWORD=${TAPO_C260_BEDROOM_PASSWORD:?err}
     ports:
       - "5000:5000"
+      - "8554:8554"
+      - "8555:8555/tcp"
+      - "8555:8555/udp"
     networks:
       - ha
       - proxy
